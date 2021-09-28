@@ -13,7 +13,7 @@ router
   .get("/:id", charactersController.detail) //A specific character
   
   .post("/", upload.single("image"),addCharacterValidator ,charactersController.addCharacter) //Create
-  .put("/:id", upload.single("image"), charactersController.updateCharacter) //Update
+  .put("/:id", upload.single("image"),addCharacterValidator ,charactersController.updateCharacter) //Update
   .delete("/:id", charactersController.deleteCharacter);
 
 module.exports = router;

@@ -92,7 +92,7 @@ module.exports = {
       db.Character.create({
         name: name,
         image: req.file ? req.file.filename : "defaultCharacter.png",
-        age: age,
+        age: +age,
         weight: weight,
         history: history,
       })
