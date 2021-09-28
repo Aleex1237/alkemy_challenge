@@ -9,16 +9,16 @@ module.exports = (sequelize, dataTypes) => {
       autoIncrement: true,
       type: dataTypes.INTEGER.UNSIGNED,
     },
-    nombre: {
+    name: {
       type: dataTypes.STRING(100),
       allowNull: false,
     },
     email: {
-      type: dataTypes.STRING(100),
+      type: dataTypes.STRING(200),
       allowNull: false,
     },
     password: {
-      type: dataTypes.STRING(100),
+      type: dataTypes.STRING(200),
       allowNull: false,
     },
   };

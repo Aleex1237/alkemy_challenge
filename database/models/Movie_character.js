@@ -7,18 +7,18 @@ module.exports = (sequelize, dataTypes) => {
       autoIncrement: true,
       type: dataTypes.INTEGER.UNSIGNED,
     },
-    characterId: {
+    idCharacter: {
       type: dataTypes.INTEGER.UNSIGNED,
-      allowNull: false,
+      allowNull: true,
     },
-    movieId: {
+    idMovie: {
       type: dataTypes.INTEGER.UNSIGNED,
       allowNull: false,
     },
   };
 
   let config = {
-    tableName: "movie_characters",
+    tableName: "moviescharacters",
     timestamps: false,
   };
 

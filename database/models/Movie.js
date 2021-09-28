@@ -9,19 +9,20 @@ module.exports = (sequelize, dataTypes) => {
       autoIncrement: true,
       type: dataTypes.INTEGER.UNSIGNED,
     },
-    imagen: {
-      type: dataTypes.STRING(255),
-      allowNull: false,
-    },
-    titulo: {
+    title: {
       type: dataTypes.STRING(100),
       allowNull: false,
     },
-    calificacion: {
+    image: {
+      type: dataTypes.STRING(255),
+      allowNull: false,
+    },
+
+    rating: {
       type: dataTypes.INTEGER.UNSIGNED,
       allowNull: false,
     },
-    genreId: {
+    idGenre: {
       type: dataTypes.INTEGER.UNSIGNED,
       allowNull: false,
     },
@@ -34,6 +35,21 @@ module.exports = (sequelize, dataTypes) => {
   };
 
   const Movie = sequelize.define(alias, cols, config);
+
+  Movie.associate = (models) => {
+    Movie.belongsTo(models.Genre, {
+      as: "genres",
+      foreignKey: "idGenre",
+    });
+
+    Movie.belongsToMany(models.Character, {
+      as: "characters",
+      through: "MovieCharacter",
+      foreignKey: "idMovie",
+      otherKey: "idCharacter",
+      timestamps: false,
+    });
+  };
 
   return Movie;
 };

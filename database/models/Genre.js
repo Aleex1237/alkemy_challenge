@@ -7,12 +7,13 @@ module.exports = (sequelize, dataTypes) => {
       autoIncrement: true,
       type: dataTypes.INTEGER.UNSIGNED,
     },
-    nombre: {
+    name: {
       type: dataTypes.STRING(100),
       allowNull: false,
     },
     imagen: {
       type: dataTypes.STRING(255),
+      allowNull: false,
     },
   };
 
@@ -22,6 +23,13 @@ module.exports = (sequelize, dataTypes) => {
   };
 
   const Genre = sequelize.define(alias, cols, config);
+
+  Genre.associate = (models) => {
+    Genre.hasMany(models.Movie, {
+      as: "movies",
+      foreignKey: "idGenre",
+    });
+  };
 
   return Genre;
 };
