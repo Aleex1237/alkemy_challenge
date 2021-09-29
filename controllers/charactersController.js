@@ -78,9 +78,7 @@ module.exports = {
     })
       .then((characters) => {
         characters.forEach((character) => {
-          character.dataValues.detalle = `${req.protocol}://${req.get(
-            "host"
-          )}/characters/${character.id}`;
+          character.dataValues.detail  = `${req.protocol}://${req.get("host")}/characters/${character.id}`;
           character.dataValues.id = undefined;
         });
 

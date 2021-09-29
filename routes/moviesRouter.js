@@ -7,12 +7,18 @@ let upload = require("../middlewares/multerMoviesConfig");
 //Controllers
 let moviesController = require("../controllers/moviesControllers");
 
+//LIST, DETAIL AND SEARCH
+router.get("/search", moviesController.search);
 router.get("/", moviesController.list);
-router.post("/", upload.single("image"), moviesController.create);
 router.get("/:id", moviesController.detail);
 
+
+//CRUD routes
+router.post("/", upload.single("image"), moviesController.create);
 router.put("/:id", upload.single("image"), moviesController.update);
-router.delete("/:id", moviesController.delete); 
+router.delete("/:id", moviesController.delete);
+
+//ASSOCIATE MOVIES TO CHARACTERS OR CHARACTERS TO MOVIES
 router.post("/associate", moviesController.associate);
 
 module.exports = router;
