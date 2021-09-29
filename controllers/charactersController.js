@@ -5,7 +5,7 @@ const { validationResult } = require("express-validator");
 module.exports = {
   list: (req, res) => {
     db.Character.findAll({
-      attributes: ["id", "name", ["image", "imagen"]],
+      attributes: ["id", "name", "image"],
     })
       .then((characters) => {
         characters.forEach((character) => {
@@ -29,12 +29,25 @@ module.exports = {
   },
 
   detail: (req, res) => {
-    db.Character.findByPk(req.params.id)
+    db.Character.findByPk(req.params.id, {
+      include: [{ association: "movies" }],
+    })
       .then((character) => {
-        console.log(character);
-        character.dataValues.imageUrl = `${req.protocol}://${req.get(
-          "host"
-        )}/characters/${character.image}`;
+        
+        
+        character.dataValues.movies.forEach(movie => {
+          movie.dataValues.MovieCharacter = undefined
+          movie.dataValues.createdAt = undefined
+          movie.dataValues.updatedAt = undefined
+          movie.dataValues.detail = `${req.protocol}://${req.get("host")}/movies/${movie.id}`
+          movie.dataValues.id = undefined
+          movie.dataValues.image = undefined
+          movie.dataValues.idGenre = undefined
+        });
+
+        
+
+        character.dataValues.imageUrl = `${req.protocol}://${req.get("host")}/characters/${character.image}`;
         character.dataValues.id = undefined;
 
         res.json(character);
@@ -102,12 +115,12 @@ module.exports = {
         .catch((err) => {
           console.log(err);
         });
-    }else{
+    } else {
       return res.json({
-        status:500,
-        msg:"Hubo un error al crear la pelicula",
-        errores: errors.mapped()
-      })
+        status: 500,
+        msg: "Hubo un error al crear la pelicula",
+        errores: errors.mapped(),
+      });
     }
   },
 
@@ -115,17 +128,26 @@ module.exports = {
   updateCharacter: (req, res) => {
     const { name, age, weight, history } = req.body;
 
-    db.Character.update(
-      {
-        name: name,
-        image: req.file ? req.file.filename : "defaultCharacter.png",
-        age: +age,
-        weight: +weight,
-        history: history,
-      },
-      { where: { id: req.params.id } }
-    );
-    res.redirect(`/characters/${req.params.id}`);
+    db.Character.findByPk(req.params.id)
+      .then((character) => {
+        db.Character.update(
+          {
+            name: name,
+            image: req.file ? req.file.filename : character.image,
+            age: +age,
+            weight: +weight,
+            history: history,
+          },
+          { where: { id: req.params.id } }
+        )
+          .then(() => {
+            res.redirect(`/characters/${req.params.id}`);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      })
+      .catch((err) => {});
   },
 
   //DELETE

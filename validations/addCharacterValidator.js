@@ -10,7 +10,7 @@ module.exports = [
   check("age").isInt().withMessage("Este campo solo acepta numeros enteros!."),
 
   check("weight")
-    .isDecimal()
+    .isDecimal({force_decimal:true})
     .withMessage("Este campo solo acepta numeros decimales!."),
 
   check("history")
