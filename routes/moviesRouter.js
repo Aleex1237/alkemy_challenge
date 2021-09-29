@@ -3,6 +3,7 @@ var router = express.Router();
 
 //Middlewares & Validations
 let upload = require("../middlewares/multerMoviesConfig");
+let moviesValidator=require("../validations/MovieValidator")
 
 //Controllers
 let moviesController = require("../controllers/moviesControllers");
@@ -14,7 +15,7 @@ router.get("/:id", moviesController.detail);
 
 
 //CRUD routes
-router.post("/", upload.single("image"), moviesController.create);
+router.post("/", upload.single("image"),moviesValidator ,moviesController.create);
 router.put("/:id", upload.single("image"), moviesController.update);
 router.delete("/:id", moviesController.delete);
 

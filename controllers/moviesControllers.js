@@ -1,5 +1,6 @@
 const db = require("../database/models");
 const { Op } = require("sequelize");
+const {validationResult}=require("express-validator")
 module.exports = {
   //MOVIES LIST
   list: (req, res) => {
@@ -55,7 +56,7 @@ module.exports = {
       include: [{ association: "characters" }, { association: "genres" }],
     })
       .then((movie) => {
-        movie.dataValues.id = undefined;
+        
         movie.dataValues.idGenre = undefined;
         movie.dataValues.genres.dataValues.id = undefined;
         movie.dataValues.genres.dataValues.imagen = undefined;
@@ -78,19 +79,28 @@ module.exports = {
   //CREATE
   create: (req, res) => {
     const { title, rating, idGenre } = req.body;
-
-    db.Movie.create({
-      title: title,
-      image: req.file ? req.file.filename : "defaultMovie.png",
-      rating: +rating,
-      idGenre: +idGenre,
-    })
-      .then((movie) => {
-        res.redirect(`/movies}`);
+    const errors=validationResult(req);
+    if(errors.isEmpty()){
+      db.Movie.create({
+        title: title,
+        image: req.file ? req.file.filename : "defaultMovie.png",
+        rating: +rating,
+        idGenre: +idGenre,
       })
-      .catch((err) => {
-        console.log(err);
+        .then((movie) => {
+          res.redirect(`/movies}`);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }else{
+      return res.json({
+        status: 500,
+        msg: "Hubo un error al crear la pelicula",
+        errores: errors.mapped(),
       });
+    }
+    
   },
 
   //UPDATE

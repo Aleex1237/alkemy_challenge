@@ -48,7 +48,7 @@ module.exports = {
         
 
         character.dataValues.imageUrl = `${req.protocol}://${req.get("host")}/characters/${character.image}`;
-        character.dataValues.id = undefined;
+        
 
         res.json(character);
       })
@@ -116,7 +116,7 @@ module.exports = {
     } else {
       return res.json({
         status: 500,
-        msg: "Hubo un error al crear la pelicula",
+        msg: "Hubo un error al crear el personaje",
         errores: errors.mapped(),
       });
     }
