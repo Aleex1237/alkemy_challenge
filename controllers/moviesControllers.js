@@ -1,6 +1,7 @@
 const db = require("../database/models");
 const { Op } = require("sequelize");
 const {validationResult}=require("express-validator")
+
 module.exports = {
   //MOVIES LIST
   list: (req, res) => {
@@ -88,7 +89,7 @@ module.exports = {
         idGenre: +idGenre,
       })
         .then((movie) => {
-          res.redirect(`/movies}`);
+          res.redirect(`/movies`);
         })
         .catch((err) => {
           console.log(err);
