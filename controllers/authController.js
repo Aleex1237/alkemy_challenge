@@ -59,8 +59,17 @@ module.exports = {
 
     if (errors.isEmpty()) {
       db.User.findOne({ where: { email: req.body.email } })
-        .then(() => {
-          res.json("Usuario logueado!");
+        .then((user) => {
+
+          //Luego de loguear al usuario almacenaremos en una constante el objeto que contenta el id y name del usuario
+          const userForToken ={
+            id:user.id,
+            name:user.name
+          }
+          //En la constante token almacenaremos el token firmado al loguearse
+          const token = jwt.sign(userForToken, "Rexxas10893")
+
+          res.json(token);
         })
         .catch((err) => {
           console.log(err);

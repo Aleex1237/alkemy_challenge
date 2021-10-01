@@ -1,6 +1,7 @@
 const db = require("../database/models");
 const { Op } = require("sequelize");
-const {validationResult}=require("express-validator")
+const { validationResult } = require("express-validator");
+const jwt = require("jsonwebtoken");
 
 module.exports = {
   //MOVIES LIST
@@ -32,11 +33,13 @@ module.exports = {
         idGenre: { [Op.substring]: req.query.genre },
       },
       order: [["title", req.query.order ? req.query.order : "ASC"]],
-      attributes: ["id", "title", "image","createdAt"],
+      attributes: ["id", "title", "image", "createdAt"],
     })
       .then((movies) => {
         movies.forEach((movie) => {
-          movie.dataValues.detail = `${req.protocol}://${req.get("host")}/movies/${movie.id}`;
+          movie.dataValues.detail = `${req.protocol}://${req.get(
+            "host"
+          )}/movies/${movie.id}`;
           movie.dataValues.id = undefined;
         });
 
@@ -57,7 +60,6 @@ module.exports = {
       include: [{ association: "characters" }, { association: "genres" }],
     })
       .then((movie) => {
-        
         movie.dataValues.idGenre = undefined;
         movie.dataValues.genres.dataValues.id = undefined;
         movie.dataValues.genres.dataValues.imagen = undefined;
@@ -80,8 +82,25 @@ module.exports = {
   //CREATE
   create: (req, res) => {
     const { title, rating, idGenre } = req.body;
-    const errors=validationResult(req);
-    if(errors.isEmpty()){
+    const errors = validationResult(req);
+    if (errors.isEmpty()) {
+      let token = ""
+      const authorization = req.get("authorization")
+      if(authorization && authorization.toLowerCase().startsWith("bearer")){
+        token = authorization.substring(7)
+      }
+
+      let decodedToken = {}
+
+      try{
+        decodedToken = jwt.verify(token, "Rexxas10893")
+      }catch{}
+
+      if(!token || !decodedToken.id){
+        return res.status(401).json({error: "Falta token de autenticación o es invalido"})
+      }
+
+
       db.Movie.create({
         title: title,
         image: req.file ? req.file.filename : "defaultMovie.png",
@@ -94,21 +113,19 @@ module.exports = {
         .catch((err) => {
           console.log(err);
         });
-    }else{
+    } else {
       return res.json({
         status: 500,
         msg: "Hubo un error al crear la pelicula",
         errores: errors.mapped(),
       });
     }
-    
   },
 
   //UPDATE
   update: (req, res) => {
     const { title, rating, idGenre } = req.body;
 
-    
     db.Movie.findByPk(req.params.id)
       .then((movie) => {
         db.Movie.update(
