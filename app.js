@@ -5,7 +5,8 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const env = require("dotenv").config();
 
-var usersRouter = require("./routes/authRouter");
+var usersRouter = require("./routes/userRouter");
+var authRouter = require("./routes/authRouter");
 var charactersRouter = require("./routes/charactersRouter");
 var moviesRouter = require("./routes/moviesRouter");
 var genresRouter = require("./routes/genresRouter");
@@ -22,7 +23,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "uploads/images")));
 
-app.use("/auth", usersRouter);
+app.use("/auth", authRouter);
+app.use("/users", usersRouter);
 app.use("/characters", charactersRouter);
 app.use("/movies", moviesRouter);
 app.use("/genres", genresRouter);

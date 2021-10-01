@@ -12,10 +12,10 @@ router.get("/", genresController.list);
 
 router.get("/:id", genresController.detail);
 
-router.post("/",upload.single("imagen"),genresValidator,genresController.create)
+router.post("/",upload.single("imagen"),genresValidator,genresController.create);
 
-router.put("/:id",upload.single("imagen"), genresValidator,genresController.update)
+router.put("/:id",upload.single("imagen"), genresValidator,genresController.update);
 
-router.delete("/:id", genresController.delete)
+router.delete("/:id", genresController.delete);
 
 module.exports = router;

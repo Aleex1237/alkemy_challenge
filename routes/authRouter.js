@@ -1,12 +1,15 @@
 var express = require("express");
 var router = express.Router();
-const authController=require("../controllers/authController")
 
 
-/* GET users listing. */
-router.get("/login", authController.login);
+//Middlewares & validations
+const authValidator = require("../validations/authValidator")
+
+//Controllers
+const authController =require("../controllers/authController")
 
 
-router.get("/register",authController.register);
+
+router.post("/register",authValidator,authController.register);
 
 module.exports = router;

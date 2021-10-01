@@ -74,7 +74,7 @@ module.exports = {
         age: { [Op.substring]: req.query.age },
         name: { [Op.substring]: req.query.name },
       },
-      attributes: ["id", "name", "image"],
+      attributes: ["id", "name", "image","age"],
     })
       .then((characters) => {
         characters.forEach((character) => {
