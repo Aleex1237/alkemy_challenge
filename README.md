@@ -31,9 +31,7 @@ El cual acepta 3 tipos de queryStrings donde en age irá un numero que será la 
 El endpoint para buscar peliculas tambien acepta 3 queryStrings
 /movies/search?name=&genre=&order=
 
-name: nombre de la pelicula, genre: numero id del genero, y order: que por defecto tiene como atributo ASC el cual ordena alfabeticamente los nombres de las peliculas  
-pero podría ser reemplazado por DESC que haría lo contrario.
+name: nombre de la pelicula, genre: numero id del genero, y order: que por defecto tiene como atributo ASC el cual ordena alfabeticamente los nombres de las peliculas pero podría ser reemplazado por DESC que haría lo contrario.
   
- El endpoint para asociar peliculas y personajes acepta 2 parametros por el body  idCharacter: el cual espera el id de un personaje y idMovie: el cual espera el id  
- de una pelicula
+ El endpoint para asociar peliculas y personajes acepta 2 parametros por el body  idCharacter: el cual espera el id de un personaje y idMovie: el cual espera el id de una pelicula
 /movies/associate
