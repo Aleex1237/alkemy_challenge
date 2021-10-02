@@ -10,6 +10,7 @@ var authRouter = require("./routes/authRouter");
 var charactersRouter = require("./routes/charactersRouter");
 var moviesRouter = require("./routes/moviesRouter");
 var genresRouter = require("./routes/genresRouter");
+var tokenVerify = require("./middlewares/tokenMiddlware");
 
 var app = express();
 
@@ -24,6 +25,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "uploads/images")));
 
 app.use("/auth", authRouter);
+app.use(tokenVerify);
 app.use("/users", usersRouter);
 app.use("/characters", charactersRouter);
 app.use("/movies", moviesRouter);

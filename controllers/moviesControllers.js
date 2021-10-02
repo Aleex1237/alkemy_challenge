@@ -1,7 +1,6 @@
 const db = require("../database/models");
 const { Op } = require("sequelize");
 const { validationResult } = require("express-validator");
-const jwt = require("jsonwebtoken");
 
 module.exports = {
   //MOVIES LIST
@@ -84,23 +83,6 @@ module.exports = {
     const { title, rating, idGenre } = req.body;
     const errors = validationResult(req);
     if (errors.isEmpty()) {
-      let token = ""
-      const authorization = req.get("authorization")
-      if(authorization && authorization.toLowerCase().startsWith("bearer")){
-        token = authorization.substring(7)
-      }
-
-      let decodedToken = {}
-
-      try{
-        decodedToken = jwt.verify(token, "Rexxas10893")
-      }catch{}
-
-      if(!token || !decodedToken.id){
-        return res.status(401).json({error: "Falta token de autenticación o es invalido"})
-      }
-
-
       db.Movie.create({
         title: title,
         image: req.file ? req.file.filename : "defaultMovie.png",

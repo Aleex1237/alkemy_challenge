@@ -1,5 +1,4 @@
 const db = require("../database/models");
-const { Op } = require("sequelize");
 const { validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -47,8 +46,8 @@ module.exports = {
           console.log(err);
         });
     } else {
-      return res.json({
-        status: 500,
+      return res.status(400).json({
+        status: 400,
         msg: "Hubo un error al crear el usuario",
         errores: errors.mapped(),
       });
@@ -60,14 +59,15 @@ module.exports = {
     if (errors.isEmpty()) {
       db.User.findOne({ where: { email: req.body.email } })
         .then((user) => {
-
           //Luego de loguear al usuario almacenaremos en una constante el objeto que contenta el id y name del usuario
-          const userForToken ={
-            id:user.id,
-            name:user.name
-          }
+          const userForToken = {
+            id: user.id,
+            name: user.name,
+          };
           //En la constante token almacenaremos el token firmado al loguearse
-          const token = jwt.sign(userForToken, "Rexxas10893")
+          const token = jwt.sign(userForToken, "Rexxas10893", {
+            expiresIn: 60 * 60,
+          });
 
           res.json(token);
         })
@@ -75,7 +75,7 @@ module.exports = {
           console.log(err);
         });
     } else {
-      res.json({
+      res.status(400).json({
         status: 400,
         errors: errors.mapped(),
         msg: "credenciales invalidas",
