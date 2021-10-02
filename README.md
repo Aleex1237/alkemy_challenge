@@ -26,8 +26,7 @@ NO OLVIDAR QUE AL LOGUEAR EL USUARIO DEBE SETEAR EN AUTHORIZATION EL TOKEN
 Algunos endpoints tendrán requerimientos "especiales" algunos de ellos son  
   
 /characters/search?age=&movie=&name=  
-El cual acepta 3 tipos de queryStrings donde en age irá un numero que será la edad del personaje, en movie irá el id de la pelicula que deseemos y en name el nombre  
-del personaje que deseemos buscar.  
+El cual acepta 3 tipos de queryStrings donde en age irá un numero que será la edad del personaje, en movie irá el id de la pelicula que deseemos y en name el nombre del personaje que deseemos buscar.  
 
 El endpoint para buscar peliculas tambien acepta 3 queryStrings
 /movies/search?name=&genre=&order=
