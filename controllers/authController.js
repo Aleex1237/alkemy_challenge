@@ -70,7 +70,11 @@ module.exports = {
             expiresIn: 60 * 60,
           });
 
-          res.json(token);
+          res.status(200).json({
+            status: 200,
+            msg: `Inserte este token en la pestaña Authorization > Bearer Token`,
+            token,
+          });
         })
         .catch((err) => {
           console.log(err);

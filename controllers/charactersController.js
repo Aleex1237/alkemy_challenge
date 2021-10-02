@@ -115,8 +115,8 @@ module.exports = {
       })
         .then(() => {
           res.status(201).json({
-            status: 200,
-            msg: "Usuario creado satisfactoriamente!.",
+            status: 201,
+            msg: "Personaje creado satisfactoriamente!.",
           });
         })
         .catch((err) => {
