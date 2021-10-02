@@ -15,7 +15,7 @@ module.exports = {
           character.dataValues.id = undefined;
         });
 
-        res.json({
+        res.status(200).json({
           total: characters.length,
           status: 200,
           data: {
@@ -24,7 +24,7 @@ module.exports = {
         });
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err), res.status(500).json(err);
       });
   },
 
@@ -33,27 +33,30 @@ module.exports = {
       include: [{ association: "movies" }],
     })
       .then((character) => {
-        
-        
-        character.dataValues.movies.forEach(movie => {
-          movie.dataValues.MovieCharacter = undefined
-          movie.dataValues.createdAt = undefined
-          movie.dataValues.updatedAt = undefined
-          movie.dataValues.detail = `${req.protocol}://${req.get("host")}/movies/${movie.id}`
-          movie.dataValues.id = undefined
-          movie.dataValues.image = undefined
-          movie.dataValues.idGenre = undefined
+        character.dataValues.movies.forEach((movie) => {
+          movie.dataValues.MovieCharacter = undefined;
+          movie.dataValues.createdAt = undefined;
+          movie.dataValues.updatedAt = undefined;
+          movie.dataValues.detail = `${req.protocol}://${req.get(
+            "host"
+          )}/movies/${movie.id}`;
+          movie.dataValues.id = undefined;
+          movie.dataValues.image = undefined;
+          movie.dataValues.idGenre = undefined;
         });
 
-        
+        character.dataValues.imageUrl = `${req.protocol}://${req.get(
+          "host"
+        )}/characters/${character.image}`;
 
-        character.dataValues.imageUrl = `${req.protocol}://${req.get("host")}/characters/${character.image}`;
-        
-
-        res.json(character);
+        return res.status(200).json({
+          status: 200,
+          data: character,
+        });
       })
       .catch((err) => {
         console.log(err);
+        return res.status(500).json(err);
       });
   },
 
@@ -74,15 +77,17 @@ module.exports = {
         age: { [Op.substring]: req.query.age },
         name: { [Op.substring]: req.query.name },
       },
-      attributes: ["id", "name", "image","age"],
+      attributes: ["id", "name", "image", "age"],
     })
       .then((characters) => {
         characters.forEach((character) => {
-          character.dataValues.detail  = `${req.protocol}://${req.get("host")}/characters/${character.id}`;
+          character.dataValues.detail = `${req.protocol}://${req.get(
+            "host"
+          )}/characters/${character.id}`;
           character.dataValues.id = undefined;
         });
 
-        return res.json({
+        return res.status(200).json({
           total: characters.length,
           status: 200,
           data: characters,
@@ -90,6 +95,7 @@ module.exports = {
       })
       .catch((err) => {
         console.log(err);
+        return res.status(500).json(err);
       });
   },
 
@@ -108,14 +114,18 @@ module.exports = {
         history: history,
       })
         .then(() => {
-          res.redirect("/characters");
+          res.status(201).json({
+            status: 200,
+            msg: "Usuario creado satisfactoriamente!.",
+          });
         })
         .catch((err) => {
           console.log(err);
+          return res.status(500).json(err);
         });
     } else {
-      return res.json({
-        status: 500,
+      return res.status(400).json({
+        status: 400,
         msg: "Hubo un error al crear el personaje",
         errores: errors.mapped(),
       });
@@ -139,13 +149,20 @@ module.exports = {
           { where: { id: req.params.id } }
         )
           .then(() => {
-            res.redirect(`/characters/${req.params.id}`);
+            res.status(200).json({
+              status: 200,
+              msg: "Usuario actualizado correctamente!",
+            });
           })
           .catch((err) => {
             console.log(err);
+            return res.status(500).json(err);
           });
       })
-      .catch((err) => {});
+      .catch((err) => {
+        console.log(err);
+        return res.status(500).json(err);
+      });
   },
 
   //DELETE
@@ -153,7 +170,7 @@ module.exports = {
   deleteCharacter: (req, res) => {
     db.Character.destroy({ where: { id: req.params.id } })
       .then(() => {
-        res.json("Character delete susscefully!.");
+        return res.status(201).json("Personaje eliminado satisfactoriamente!.");
       })
       .catch((err) => {
         console.log(err);

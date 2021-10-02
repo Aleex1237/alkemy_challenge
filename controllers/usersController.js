@@ -1,5 +1,4 @@
 const db = require("../database/models");
-const { Op } = require("sequelize");
 const { validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 
@@ -12,19 +11,28 @@ module.exports = {
             "host"
           )}/users/${user.id}`;
         });
-        res.json(users);
+        return res.status(200).json({
+          status: 200,
+          total: users.length,
+          data: users,
+        });
       })
       .catch((err) => {
         console.log(err);
+        return res.status(500).json(err);
       });
   },
   detail: (req, res) => {
     db.User.findByPk(req.params.id, { attributes: ["id", "name", "email"] })
       .then((user) => {
-        res.json(user);
+        return res.status(200).json({
+          status: 200,
+          user,
+        });
       })
       .catch((err) => {
         console.log(err);
+        return res.status(500).json(err);
       });
   },
 
@@ -36,21 +44,30 @@ module.exports = {
           db.User.update(
             {
               name: req.body.name ? req.body.name : user.name,
-              password: req.body.password? bcrypt.hashSync(req.body.password): user.password,
+              password: req.body.password
+                ? bcrypt.hashSync(req.body.password)
+                : user.password,
             },
             { where: { id: req.params.id } }
-          ).then(() => {
-            res.redirect("/users")
-          }).catch((err) => {
-            console.log(err);
-          });
+          )
+            .then(() => {
+              return res.status(201).json({
+                status: 200,
+                msg: "Usuario actualizado satisfactoriamente!",
+              });
+            })
+            .catch((err) => {
+              console.log(err);
+              return res.status(500).json(err);
+            });
         })
         .catch((err) => {
           console.log(err);
+          return res.status(500).json();
         });
     } else {
-      return res.json({
-        status: 500,
+      return res.status(400).json({
+        status: 400,
         msg: "Hubo un error al actualizar los datos del usuario",
         errores: errors.mapped(),
       });
@@ -60,9 +77,13 @@ module.exports = {
   delete: (req, res) => {
     db.User.destroy({ where: { id: req.params.id } })
       .then(() => {
-        res.json("Usuario eliminado satisfactoriamente!.");
+        res.status(200).json({
+          status: 200,
+          msg: "Usuario eliminado satisfactoriamente!.",
+        });
       })
       .catch((err) => {
+        console.log(err);
         return res.json(err);
       });
   },

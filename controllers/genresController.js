@@ -5,7 +5,7 @@ module.exports = {
   list: (req, res) => {
     db.Genre.findAll()
       .then((genres) => {
-        res.json({
+        res.status(200).json({
           status: 200,
           total: genres.length,
           data: genres,
@@ -13,6 +13,7 @@ module.exports = {
       })
       .catch((err) => {
         console.log(err);
+        return res.status(500).json(err);
       });
   },
   detail: (req, res) => {
@@ -33,10 +34,14 @@ module.exports = {
           movie.dataValues.updatedAt = undefined;
         });
 
-        res.json(genre);
+        return res.status(200).json({
+          status: 200,
+          data: genre,
+        });
       })
       .catch((err) => {
         console.log(err);
+        return res.status(500).json(err);
       });
   },
   create: (req, res) => {
@@ -48,14 +53,18 @@ module.exports = {
         imagen: req.file ? req.file.filename : "defaultGenre.png",
       })
         .then(() => {
-          res.redirect(`/genres`);
+          res.status(201).json({
+            status: 201,
+            msg: "Genero creado satisfactoriamente!.",
+          });
         })
         .catch((err) => {
           console.log(err);
+          return res.status(500).json(err);
         });
     } else {
-      return res.json({
-        status: 500,
+      return res.status(400).json({
+        status: 400,
         msg: "Hubo un error al crear el genero",
         errores: errors.mapped(),
       });
@@ -76,18 +85,23 @@ module.exports = {
             { where: { id: req.params.id } }
           )
             .then(() => {
-              res.redirect(`/genres/${req.params.id}`);
+              res.status(201).json({
+                status: 201,
+                msg: "Genero actualizado satisfactoriamente!.",
+              });
             })
             .catch((err) => {
               console.log(err);
+              return res.status(500).json(err);
             });
         })
         .catch((err) => {
           console.log(err);
+          return res.status(500).json(err);
         });
     } else {
-      return res.json({
-        status: 500,
+      return res.status(400).json({
+        status: 400,
         msg: "Hubo un error al crear el genero",
         errores: errors.mapped(),
       });
@@ -96,10 +110,14 @@ module.exports = {
   delete: (req, res) => {
     db.Genre.destroy({ where: { id: req.params.id } })
       .then(() => {
-        res.json("Genre delete susscefully!.");
+        res.status(201).json({
+          status: 201,
+          msg: "Genero eliminado satisfactoriamente!.",
+        });
       })
       .catch((err) => {
-       console.log(err);
+        console.log(err);
+        return res.status(500).json(err);
       });
   },
 };

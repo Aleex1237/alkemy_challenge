@@ -8,9 +8,7 @@ const { SENDGRID_API } = require("../config/key");
 
 const transporter = nodemailer.createTransport(
   sendGridTransport({
-    auth: {
-      api_key: SENDGRID_API,
-    },
+    auth: { api_key: SENDGRID_API },
   })
 );
 
@@ -34,16 +32,19 @@ module.exports = {
             <p>Bienvenido ${user.name}</p>`,
             })
             .then(() => {
-              res.json(
-                "Usuario creado satisfactoriamente!. Verifique su email :)"
-              );
+              return res.status(201).json({
+                status: 201,
+                msg: "Usuario creado satisfactoriamente!. Verifique su email :)",
+              });
             })
             .catch((err) => {
               console.log(err);
+              return res.status(500).json(err);
             });
         })
         .catch((err) => {
           console.log(err);
+          return res.status(500).json(err);
         });
     } else {
       return res.status(400).json({
@@ -73,9 +74,10 @@ module.exports = {
         })
         .catch((err) => {
           console.log(err);
+          return res.status(500).json(err);
         });
     } else {
-      res.status(400).json({
+      return res.status(400).json({
         status: 400,
         errors: errors.mapped(),
         msg: "credenciales invalidas",

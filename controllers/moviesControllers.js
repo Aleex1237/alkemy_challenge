@@ -13,7 +13,7 @@ module.exports = {
           )}/movies/${movie.id}`;
           movie.dataValues.id = undefined;
         });
-        res.json({
+        return res.status(200).json({
           status: 200,
           total: movies.length,
           movies,
@@ -21,6 +21,7 @@ module.exports = {
       })
       .catch((err) => {
         console.log(err);
+        return res.status(500).json(err);
       });
   },
 
@@ -42,7 +43,7 @@ module.exports = {
           movie.dataValues.id = undefined;
         });
 
-        res.json({
+        return res.status(200).json({
           status: 200,
           total: movies.length ? movies.length : "No hay peliculas que mostrar",
           movies,
@@ -50,6 +51,7 @@ module.exports = {
       })
       .catch((err) => {
         console.log(err);
+        return res.status(500).json(500);
       });
   },
 
@@ -69,10 +71,14 @@ module.exports = {
 
         console.log();
 
-        res.json(movie);
+        return res.status(200).json({
+          status: 200,
+          data: movie,
+        });
       })
       .catch((err) => {
         console.log(err);
+        return res.status(500).json(err);
       });
   },
 
@@ -89,15 +95,19 @@ module.exports = {
         rating: +rating,
         idGenre: +idGenre,
       })
-        .then((movie) => {
-          res.redirect(`/movies`);
+        .then(() => {
+          return res.status(201).json({
+            status: 201,
+            msg: "Pelicula creada satisfactoriamente!.",
+          });
         })
         .catch((err) => {
           console.log(err);
+          return res.status(500).json(err);
         });
     } else {
-      return res.json({
-        status: 500,
+      return res.status(400).json({
+        status: 400,
         msg: "Hubo un error al crear la pelicula",
         errores: errors.mapped(),
       });
@@ -120,14 +130,19 @@ module.exports = {
           { where: { id: req.params.id } }
         )
           .then(() => {
-            res.redirect(`/movies/${req.params.id}`);
+            return res.status(200).json({
+              status: 200,
+              msg: "Pelicula actualizada satisfactoriamente!.",
+            });
           })
           .catch((err) => {
             console.log(err);
+            return res.status(500).json(err);
           });
       })
       .catch((err) => {
         console.log(err);
+        return res.status(500).json(err);
       });
   },
 
@@ -135,9 +150,13 @@ module.exports = {
   delete: (req, res) => {
     db.Movie.destroy({ where: { id: req.params.id } })
       .then(() => {
-        res.json("Movie delete susscefully!.");
+        res.status(200).json({
+          status: 200,
+          msg: "Pelicula eliminada satisfactoriamente!",
+        });
       })
       .catch((err) => {
+        console.log(err);
         return res.json(err);
       });
   },
@@ -152,10 +171,14 @@ module.exports = {
       idMovie: idMovie,
     })
       .then(() => {
-        res.json("Associattion created susscefully");
+        res.status(200).json({
+          status: 200,
+          msg: "Pelicula y personaje asociados!",
+        });
       })
       .catch((err) => {
         console.log(err);
+        return res.status(500).json(err);
       });
   },
 };
