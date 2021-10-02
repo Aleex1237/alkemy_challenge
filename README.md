@@ -1,7 +1,8 @@
 # Challenge Alkemy
 
 ## Desafio Disney con **Node.Js**  
-La api de Disney fue creada con la tecnologia Node.js y su framework Express. Como gestor de bases de datos se utilizó MySQL y como ORM la librería Sequelize.  
+La api de Disney fue creada con la tecnologia Node.js y su framework Express. Como gestor de bases de datos se utilizó MySQL y como ORM la librería Sequelize.
+Se han implementado diferentes herramientas como express-validator, jwt, bcrypt, etc... Para poder crear una API funcional, segura y comoda de usar.
 Para poder utilizar los endpoints en la carpeta scripts existe el archivo "disneyChallenge_endpoints.json" el cual se ejecuta con la aplicación Postman.
 
 ### ¿Como correr el proyecto?  
