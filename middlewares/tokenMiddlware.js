@@ -1,25 +1,25 @@
-const jwt = require("jsonwebtoken");
+const jwt = require('jsonwebtoken');
 
-module.exports = (req, res, next) => {
-  let token = "";
-
-  const authorization = req.get("authorization");
-
-  if (authorization && authorization.toLowerCase().startsWith("bearer")) {
-    token = authorization.substring(7);
-  }
-
-  let decodedToken = {};
-
+const tokenVerify = (req, res, next) => {
   try {
-    decodedToken = jwt.verify(token, process.env.SECRET);
-  } catch {}
+    let token = '';
 
-  if (!token || !decodedToken.id) {
-    return res
-      .status(401)
-      .json({ error: "Falta token de autenticación o es invalido" });
+    const authorization = req.get('authorization');
+    if (!authorization) {
+      console.log(error);
+    }
+    token = authorization.split(' ')[1];
+    let decodedToken = jwt.verify(token, process.env.SECRET);
+
+    if (!decodedToken.id) {
+      return res
+        .status(401)
+        .json({ error: 'Falta token de autenticación o es invalido' });
+    }
+
+    next();
+  } catch {
+    console.log(error);
   }
-
-  next();
 };
+module.exports = { tokenVerify };
